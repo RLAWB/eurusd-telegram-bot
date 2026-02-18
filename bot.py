@@ -1,11 +1,20 @@
+import os
 import requests
 
-# 🔹 REPLACE THESE WITH YOUR REAL VALUES
-TELEGRAM_TOKEN = "YOUR_BOT_TOKEN_HERE"
-CHAT_ID = "YOUR_CHAT_ID_HERE"
+# Use GitHub Secrets
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 def send_test_message():
-    message = "✅ GitHub Actions test message working!"
+    if not TELEGRAM_TOKEN:
+        print("❌ TELEGRAM_TOKEN is missing")
+        return
+
+    if not CHAT_ID:
+        print("❌ CHAT_ID is missing")
+        return
+
+    message = "✅ GitHub Actions Telegram test working!"
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
 
