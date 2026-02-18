@@ -7,7 +7,7 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
 def fetch_candles():
-    url = "https://api.binance.com/api/v3/klines"
+    url = "https://api.binance.com/api/v3/ticker/price?symbol=EURUSDT"
     params = {
         "symbol": "EURUSDT",
         "interval": "1m",
