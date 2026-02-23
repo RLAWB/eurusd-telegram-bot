@@ -28,7 +28,6 @@ def fetch_candles():
     except Exception as e:
         print("Fetch error:", e)
         return None
-}
     }
 
     r = requests.get(url, params=params, timeout=10)
