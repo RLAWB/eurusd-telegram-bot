@@ -1,10 +1,10 @@
-
 import os
 import requests
 import time
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
+
 
 def fetch_candles():
     try:
@@ -28,27 +28,31 @@ def fetch_candles():
     except Exception as e:
         print("Fetch error:", e)
         return None
-    }
 
-    r = requests.get(url, params=params, timeout=10)
-    data = r.json()
-    closes = [float(candle[4]) for candle in data]
-    return closes
 
 def send_to_telegram(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    requests.post(url, data={"chat_id": CHAT_ID, "text": message}, timeout=10)
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        requests.post(url, data={"chat_id": CHAT_ID, "text": message}, timeout=10)
+    except Exception as e:
+        print("Telegram error:", e)
+
 
 def calculate_sma(prices, period):
     return sum(prices[-period:]) / period
+
 
 def main():
     print("Bot started")
 
     last_signal = None
 
-    for i in range(300):  # 5 hours (1 min checks)
+    for i in range(10):  # Short test first
         prices = fetch_candles()
+
+        if prices is None:
+            time.sleep(60)
+            continue
 
         sma10 = calculate_sma(prices, 10)
         sma20 = calculate_sma(prices, 20)
@@ -56,16 +60,17 @@ def main():
         print(f"Run {i+1} | SMA10: {sma10} | SMA20: {sma20}")
 
         if sma10 > sma20 and last_signal != "BUY":
-            send_to_telegram("📈 BUY signal (SMA10 crossed above SMA20)")
+            send_to_telegram("BUY signal")
             last_signal = "BUY"
 
         elif sma10 < sma20 and last_signal != "SELL":
-            send_to_telegram("📉 SELL signal (SMA10 crossed below SMA20)")
+            send_to_telegram("SELL signal")
             last_signal = "SELL"
 
         time.sleep(60)
 
     print("Session ended")
+
 
 if __name__ == "__main__":
     main()
