@@ -7,11 +7,27 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
 def fetch_candles():
-    url = "https://fapi.binance.com/fapi/v1/indexPriceKlines"
-params = {
-    "pair": "EURUSD",
-    "interval": "1m",
-    "limit": 50
+    try:
+        url = "https://fapi.binance.com/fapi/v1/indexPriceKlines"
+        params = {
+            "pair": "EURUSD",
+            "interval": "1m",
+            "limit": 50
+        }
+
+        r = requests.get(url, params=params, timeout=10)
+        data = r.json()
+
+        if not isinstance(data, list):
+            print("API Error:", data)
+            return None
+
+        closes = [float(candle[4]) for candle in data]
+        return closes
+
+    except Exception as e:
+        print("Fetch error:", e)
+        return None
 }
     }
 
