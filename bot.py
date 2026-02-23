@@ -45,7 +45,12 @@ def calculate_sma(prices, period):
 def main():
     print("Bot started")
 
-    last_signal = None
+    for i in range(3):  # very short test
+        print("Sending test message...")
+        send_to_telegram("✅ Bot is alive and running")
+        time.sleep(10)
+
+    print("Test finished")
 
     for i in range(10):  # Short test first
         prices = fetch_candles()
