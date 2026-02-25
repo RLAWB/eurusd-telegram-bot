@@ -2,7 +2,7 @@ name: Trading Bot (1 min)
 
 on:
   schedule:
-    - cron: "* 15-21 * * *"   # every minute, 4pm–10pm Cameroon
+    - cron: "* 14-20 * * *"   # 4pm–10pm Cameroon (UTC+1)
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,9 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy requests
 
       - name: Run bot
         env:
