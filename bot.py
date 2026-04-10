@@ -1,7 +1,7 @@
 import os
 import time
 import json
-import websocket-client
+import websocket
 import requests
 import pandas as pd
 import numpy as np
